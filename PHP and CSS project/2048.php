@@ -1,26 +1,10 @@
-<?php
-/*------------ABOUT THIS PROJECT-------------
-Everything is on Github.
-https://github.com/Darkxell/2048-in-php
--------------------------------------------*/
-/*     $_GET[] names
-move=(1) (Optionnal)
-score= (integer)
-c11= c12= c13= c14=
-c21= c22= c23= c24=  (int "tiles values")
-c31= c32= c33= c34=
-c41= c42= c43= c44=
-page = (unset/0  or  1  or  2)
-uset/0 => normal game
-1      => End page
-2      => Easter egg page
-*/
-?>
-<?php /*-----Functions-----*/
 
-/* html_tile : Get the tile id and return the HTML div for that tile if needed,
-returns an empty String if the tile is blank.
-(int) -> (String) */
+<?php /*-----Functions-----*/
+session_start();
+if(!isset($_SESSION['login_user'])){
+header("location: index.php");
+}
+
 function html_tile($tileid){
 	$string = "";
 	$tilevalue = $_GET[$tileid];
@@ -385,324 +369,56 @@ if(isset($_GET["page"])){
 	
 	<meta charset="UTF-8"/>
 	<title>
-		2048 in php
+		2048
 	</title>
 	<link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
-	<style type="text/css">
-		body{
-			font-family: 'Roboto', sans-serif;
-			background-color:#dedede;
-		}
-		footer.main{
-			margin-top:65px;
-			background-color:#f9f9f9;
-			height:25px;
-			width:100%;
-			text-align:right;
-			box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7);
-		}
-		header.main{
-			height:100px;
-			background-color:#f9f9f9;
-			margin-bottom:65px;
-			box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7);
-			text-align:center;
-			margin-left:10px;
-			margin-right:10px;
-		}
-		header.main p{
-			font-size:16px;
-		}
-		footer.sub{
-			margin-left:10px;
-			margin-right:10px;
-			margin-top:365px;
-			padding-top:3px;
-			padding-bottom:3px;
-			background-color:#efefef;
-			border-radius: 15px;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-		}
-		header.sub{
-			margin-left:10px;
-			margin-right:10px;
-			height:85px;
-			background-color:#efefef;
-			border-radius: 15px;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-		}
-		header.sub span.title{
-			font-size:40px;
-			padding-left:180px;
-		}
-		header.sub span.score{
-			font-size:25px;
-			background-color:GoldenRod;
-			border-radius:10px;
-			padding-left:5px;
-			padding-right:5px;
-			margin-left:35px;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-			transition: all .2s ease-in-out;
-		}
-		header.sub span.new{
-			margin-left:15px;
-			font-size:25px;
-			background-color:GoldenRod;
-			border-radius: 10px;
-			height:35px;
-			padding-left:5px;
-			padding-right:5px;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-			transition: all .2s ease-in-out;
-		}
-		header.sub span.new a{
-			color:Black;
-			text-decoration:none;
-		}
-		header.sub span.score:hover{
-			background-color:Gold;
-			box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7);
-		}
-		header.sub span.new:hover{
-			background-color:Gold;
-			box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7);
-		}
-		th.g{
-			width: 97.5px;
-			height: 97.5px;
-			font-size:25px;
-			border-radius: 3px;
-            background: rgba(238,228,218,.35);
-		}
-		div.page{
-			width:700px;
-			margin-right:auto;
-			margin-left:auto;
-			background-color:#fcfcfc;
-			box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7);
-		}
-		div.grid{
-			margin-left:30px;
-			background-color:#efefef;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-			width:322px;
-			border-radius: 15px;
-			padding-top:10px;
-			padding-bottom:10px;
-			padding-left:10px;
-			padding-right:10px;
-			float:left;
-		}
-		div.dpad{
-			float:right;
-			width:150px;
-			height:150px;
-			background-color:#efefef;
-			margin-right:70px;
-			margin-top:70px;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-			padding-top:10px;
-			padding-bottom:10px;
-			padding-left:10px;
-			padding-right:10px;
-			border-radius: 15px;
-		}
-		th.key{
-			height:45px;
-			width:45px;
-			border-radius:10px;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-			transition: all .15s ease-in-out;
-		}
-		th.key:hover{
-			box-shadow: -1px 2px 3px 1px #c9c9c9;
-			background-color:#e1e1e1;
-		}
-		th.key a{
-			font-size:35px;
-			text-decoration:none;
-			color:#efefef;
-			transition: all .15s ease-in-out;
-		}
-		th.key:hover a{
-			color:#e1e1e1;
-		}
-		article.hbox{
-			margin-top:20px;
-			margin-bottom:20px;
-			margin-left:20px;
-			margin-right:20px;
-			background-color:#f3f3f3;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-			height:67px;
-			overflow:hidden;
-			transition: height 1s;
-		}
-		article.hbox:hover{
-			height:333px;
-		}
-		article.hbox h1{
-			text-align:center;
-		}
-		article.hbox header{
-			background-color:#fcfcfc;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-		}
-		article.textbox{
-			margin-top:20px;
-			margin-bottom:20px;
-			margin-left:20px;
-			margin-right:20px;
-			background-color:#f3f3f3;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-		}
-		article.textbox h1{
-			text-align:center;
-		}
-		article.textbox header{
-			background-color:#fcfcfc;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-		}
-		div.article_body{
-			margin-left:20px;
-			margin-right:20px;
-			margin-bottom:20px;
-			background-color:#fcfcfc;
-			box-shadow: -1px 2px 3px 1px #a9a9a9;
-			text-align:justify;
-		}
-		div.hidden{
-			visibility:hidden;
-			font-size:4px;
-		}
-		p.easteregg{
-			color:#fcfcfc;
-			font-size:9px;
-			cursor:default;
-		}
-		p.easteregg a{
-			text-decoration:none;
-			color:#fcfcfc;
-			cursor:default;
-		}
-		div.tile_2{
-			height:78px;
-			width:78px;
-			background-color:#eee4da;
-			color:#786e64;
-			border-radius: 15px;
-			font-size:22px;
-		}
-		div.tile_4{
-			height:78px;
-			width:78px;
-			background-color:#ece0c6;
-			border-radius: 15px;
-			font-size:22px;
-			color:#786e64;
-		}
-		div.tile_8{
-			height:78px;
-			width:78px;
-			background-color:#f2b179;
-			border-radius: 15px;
-			font-size:22px;
-			color:White;
-		}
-		div.tile_16{
-			height:78px;
-			width:78px;
-			background-color:#ef8d4c;
-			border-radius: 15px;
-			font-size:22px;
-			color:White;
-		}
-		div.tile_32{
-			height:78px;
-			width:78px;
-			background-color:#f77b61;
-			border-radius: 15px;
-			font-size:22px;
-			color:White;
-		}
-		div.tile_64{
-			height:78px;
-			width:78px;
-			background-color:#e85a36;
-			border-radius: 15px;
-			font-size:22px;
-			color:White;
-		}
-		div.tile_128{
-			height:78px;
-			width:78px;
-			background-color:#f1d96b;
-			border-radius: 15px;
-			font-size:22px;
-			color:White;
-		}
-		div.tile_256{
-			height:78px;
-			width:78px;
-			background-color:#ead34f;
-			border-radius: 15px;
-			font-size:22px;
-			color:White;
-		}
-		div.tile_512{
-			height:78px;
-			width:78px;
-			background-color:#e2c029;
-			border-radius: 15px;
-			font-size:22px;
-			color:White;
-		}
-		div.tile_1024{
-			height:78px;
-			width:78px;
-			background-color:#e4b914;
-			border-radius: 15px;
-			font-size:22px;
-			color:White;
-		}
-		div.tile_2048{
-			height:78px;
-			width:78px;
-			background-color:#efc302;
-			border-radius: 15px;
-			font-size:22px;
-			color:White;
-		}
-		div.tile_max{
-			height:78px;
-			width:78px;
-			background-color:Black;
-			border-radius: 15px;
-			font-size:22px;
-			color:White;
-		}
-	</style>
+	<link rel="stylesheet" href="2048.css">
 </head>
+<script>
+	function start() {
+  document.getElementById("start").style.display = "none";
+}
+</script>
 <body>
-	<header class="main">
-		<h1>
-			2048 in php
-		</h1>
-		<p>
-			No javascript, no Flash
-		</p>
-	</header>
+	<?php
+	if ($_SESSION['start']==1) {
+		$_SESSION['start']=2;
+	
+	?>
+	<div id="start">
+		<div id="text">
+				<h2>2048</h2><br>
+				<h4>How to play</h4>
+				<p>
+						2048 is a puzzle game that got popular on smartphones devices.
+						<br/><br/>
+						It consist in merging similar tiles that appears on a grid to form bigger ones.
+						<br/>
+						Tiles that are going to appear are 2 and 4 , and you can slide them in a direction
+						using the Dpad on the right. Each time you move a new tile will appear at a random location.
+						<br/>
+						You will lose if you can't make any move at all.
+						<br/>
+						Your score increases each time you merge two tiles together, by the value of the merged tile.
+						<br/>
+						Your goal is to form a 2048 tile.
+						<br/><br/>
+						Good luck!
+						<br/>
+						You will need it...
+					</p>
+             <button onclick="start()">Start</button>
+			</div>
+		</div>
+		<?php
+
+	}
+		?>
 	<div class="page">
 		<?php
 		if($page == 0) {
 		//Displays the normal page.
 		?>
-		<p class="easteregg">
-			You found an easter egg. How lucky! Click 
-			<a href="2048.php?score=<?php echo($_GET["score"]."&".gettiles()."&page=2") ?>">here</a> 
-			to claim your prize.
-		</p>
 		<header class="sub">
 			<br/>
 			<span class="title">
@@ -710,13 +426,57 @@ if(isset($_GET["page"])){
 					2048
 				</strong>
 			</span>
+			<span class="new">
+				<a href="home.php">Home</a>
+			</span>
 			<span class="score">
 				score :
-				<?php echo($_GET["score"]) ; ?>
+				<?php echo($_GET["score"]) ; 
+				if (file_exists('scores.txt')) {
+					$fn = fopen("scores.txt","r");
+  					$result = fgets($fn);
+  					fclose($fn);
+  					$str=explode("\t",$result);
+  					if ($str[0]==$_SESSION['login_user']) {
+  						/*$fileContents = file('scores.txt');
+  						array_shift($fileContents);
+  						$data=$_SESSION['login_user']."\t".$_GET["score"];
+  						array_unshift($fileContents, $data);
+  						$newContent = implode("\n", $fileContents);
+						$fp = fopen('scores.txt', "w+");   // w+ means create new or replace the old file-content
+						fputs($fp, $newContent);
+						fclose($fp);*/
+  						$arr = file('scores.txt');
+$data=$_SESSION['login_user']."\t".$_GET["score"]."\n";
+// edit first line
+$arr[0] = $data;
+
+// write back to file
+file_put_contents('scores.txt', implode($arr));
+  					}
+  					else {
+  						$fileContents = file('scores.txt');
+  						$data=$_SESSION['login_user']."\t".$_GET["score"]."\n";
+  						array_unshift($fileContents, $data);
+  						$newContent = implode($fileContents);
+						$fp = fopen('scores.txt', "w+");   // w+ means create new or replace the old file-content
+						fputs($fp, $newContent);
+						fclose($fp);
+  					}
+  				}
+  				else
+  				{
+			$data=$_SESSION['login_user']."\t".$_GET["score"];
+			file_put_contents('scores.txt', $data,FILE_USE_INCLUDE_PATH | FILE_APPEND);
+		}
+			?>
 			</span>
 			<span class="new">
 				<a href="2048.php">New game</a>
 			</span>
+			<span class="logout">
+			<a href="logout.php" class="button7" >Logout</a>
+		</span>
 		</header>
 		<br/>
 		<div class="grid">
@@ -750,79 +510,41 @@ if(isset($_GET["page"])){
 		<div class="dpad">
 			<table>
 			<tr>
-				<th></th>
+				<th style="width: 53px; height:55px"></th>
 				<th class="key"><a href="<?php echo("2048.php?score=".getmovedscore(1)."&move=1&".getmoveresult(1)) ; ?>"><img src="uparrow.png" style="width:36px;height:36px"/></a></th>
 				<th></th>
 			</tr>
 			<tr>
-				<th class="key"><a href="<?php echo("2048.php?score=".getmovedscore(4)."&move=1&".getmoveresult(4)) ; ?>"><img src="leftarrow.png" style="width:30px;height:30px"/></a></th>
+				<th class="key"><a href="<?php echo("2048.php?score=".getmovedscore(4)."&move=1&".getmoveresult(4)) ; ?>"><img src="leftarrow.png" style="width:36px;height:36px"/></a></th>
 				<th></th>
-				<th class="key"><a href="<?php echo("2048.php?score=".getmovedscore(2)."&move=1&".getmoveresult(2)) ; ?>"><img src="rightarrow.png" style="width:20px;height:20px"/></a></th>
+				<th class="key"><a href="<?php echo("2048.php?score=".getmovedscore(2)."&move=1&".getmoveresult(2)) ; ?>"><img src="rightarrow.png" style="width:36px;height:36px"/></a></th>
 			</tr>
 			<tr>
 				<th></th>
-				<th class="key"><a href="<?php echo("2048.php?score=".getmovedscore(3)."&move=1&".getmoveresult(3)) ; ?>"><img src="downarrow.png" style="width:35px;height:35px"/></a></th>
+				<th class="key"><a href="<?php echo("2048.php?score=".getmovedscore(3)."&move=1&".getmoveresult(3)) ; ?>"><img src="downarrow.png" style="width:36px;height:36px"/></a></th>
 				<th></th>
 			</tr>
 			</table>
 		</div>
+		<div class="scoreboard"><h3 >Score board</h3>
+			<?php
+			$fileoutput=file_get_contents('scores.txt',FILE_SKIP_EMPTY_LINES);
+			$var=explode("\n", $fileoutput);
+			 foreach ($var as $line) {
+			 	$data=explode("\t", $line);
+			 	
+			 	$score=$data[0]."\t".$data[1];
+			?>
+			<p><?php
+				
+			echo $data[0]."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$data[1]."\n"; ?>
+			</p>
+		<?php }?>
+			
+		</div>
 		<br/>
+		
 		<footer class="sub">
-			<article class="hbox">
-				<header>
-					<h1>
-						How to play
-					</h1>
-				</header>
-				<div class="article_body">
-					<p>
-						2048 is a puzzle game that got popular on smartphones devices.
-						<br/><br/>
-						It consist in merging similar tiles that appears on a grid to form bigger ones.
-						<br/>
-						Tiles that are going to appear are 2 and 4 , and you can slide them in a direction
-						using the Dpad on the right. Each time you move a new tile will appear at a random location.
-						<br/>
-						You will lose if you can't make any move at all.
-						<br/>
-						Your score increases each time you merge two tiles together, by the value of the merged tile.
-						<br/>
-						Your goal is to form a 2048 tile.
-						<br/><br/>
-						Good luck!
-						<br/>
-						You will need it...
-					</p>
-				</div>
-				<div class="hidden"><br/></div>
-			</article>
-			<article class="hbox">
-				<header>
-					<h1>
-						About me
-					</h1>
-				</header>
-				<div class="article_body">
-					<p>
-						You want to know about me do ya?
-						<br/><br/>
-						I'm Nicolas Candela, also known as Darkxell.
-						<br/>
-						I love programming, obviously, and computing in general. This project 
-						is a little challenge for me, because I want a 2048 game in only one
-						file, with no Javascript, no Cookies and no Flash. Here's the result!
-						<br/><br/>
-						I also love nekos, but that's not the point. You can mail me if you want
-						to know something about me, want a collab on a project or if you are a 
-						neko yourself.
-						<br/><br/>
-						Love ya!
-						<br/><br/>
-						<a href="mailto:darkxell.mc@gmail.com">Mail me</a>
-					</p>
-				</div>
-				<div class="hidden"><br/></div>
-			</article>
 			<?php
 			//Displays an article if you have a 2048 or higher tile on the grid.
 			if(haswon()){
@@ -843,134 +565,19 @@ if(isset($_GET["page"])){
 						But you achieved nothing. Do you feel happy about it? You shouldn't.
 						You lost your time here... But are you going to continue wasting it?
 						<br/>
-						Maybe... 
-						<br/><br/>
-						By the way, did you find the easter egg? I think it's worth it!
-						<br/><br/>
 						Thanks for playing anyways!
-						<br/><br/>
-						More of my games here : [I'm a lazy developper.]
 					</p>
 				</div>
 				<div class="hidden"><br/></div>
 			</article>
-			<?php
-			}
-			//Displays an article if you have a very very high score, indicating
-			//you cheated.
-			if( $_GET["score"] > 300000 ){
-			?>
-			<article class="hbox">
-				<header>
-					<h1>
-						Because you cheated
-					</h1>
-				</header>
-				<div class="article_body">
-					<p>
-						Hum... It seems like you indeed cheated to win.
-						<br/><br/>
-						Congratulations!
-						<br/>
-						I was not expecting this... But maybe you are worse than expected!
-						But you achieved nothing. Do you feel happy about it? You shouldn't.
-						You lost your time here... But are you going to continue wasting it?
-						<br/>
-						Maybe... 
-						<br/><br/>
-						Maybe you should try to really beat the game now.
-						<br/><br/>
-						Thanks for cheating anyways!
-						<br/><br/>
-						Click <a href="">here</a> to start a new game.
-					</p>
-				</div>
-				<div class="hidden"><br/></div>
-			</article>
+			
 			<?php
 			}
 			?>
 		</footer>
-		<br/>
-		<?php
-		} // End of the $page=0
-		if($page == 1){
-		//page if you have lost
-		?>
-		<p class="easteregg">
-			You found an easter egg. How lucky!
-		</p>
-		<header class="sub">
-			<br/>
-			<span class="title">
-				<strong>
-					2048
-				</strong>
-			</span>
-			<span class="score">
-				score :
-				<?php echo($_GET["score"]) ; ?>
-			</span>
-			<span class="new">
-				<a href="2048.php">New game</a>
-			</span>
-		</header>
-		<footer>
-			<article class="textbox">
-				<br/>
-				<header>
-					<h1>
-						Game Over
-					</h1>
-				</header>
-				<br/>
-				<div class="article_body">
-					<p>
-						It's game over...
-						<br/><br/>
-						Sorry! Maybe you will do better next time! I hope you had fun,
-						thank you for hanging around!
-						<br/>
-						Feel free to mail me for any suggestion or feedback, that's
-						always appreciated.
-						<br/><br/><br/>
-						Share your score [Comming soon]
-						<br/><br/>
-					</p>
-				</div>
-				<div class="hidden"><br/></div>
-			</article>
-			<br/><br/>
-		</footer>
-		<?php
-		} // End of the $page=1
-		if($page == 2){
-		?>
-		<p class="easteregg">
-			Yes, the easter egg is still there. You really notice things...
-		</p>
-		<header class="sub">
-			<br/>
-			<span class="title">
-				<strong>
-					2048
-				</strong>
-			</span>
-			<span class="score">
-				score :
-				<?php echo($_GET["score"]) ; ?>
-			</span>
-			<span class="new">
-				<a href="2048.php?score=<?php echo($_GET["score"]."&".gettiles()) ; ?>">Continue</a>
-			</span>
-		</header>
-		
-		<br/>
-		PAGE 2 (EASTEREGG)
-		<br/>
 		
 		<?php
-		} //end of $page=2 (easteregg)
+		} //end of $page=0
 		?>
 	</div>
 	
